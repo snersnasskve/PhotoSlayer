@@ -1,0 +1,2 @@
+# PhotoSlayer
+Identify Duplicate Photos
