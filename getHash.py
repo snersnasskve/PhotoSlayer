@@ -1,7 +1,5 @@
 import hashlib
 
-
-
 def compute_md5(file_path):
     md5_hash = hashlib.md5()
     with open(file_path, "rb") as f:
@@ -9,7 +7,7 @@ def compute_md5(file_path):
             md5_hash.update(chunk)
     return md5_hash.hexdigest()
 
-filePath = "C:\\Users\\sners\\Desktop\\karen found\\2009-03 - 03-09 Nott Nat Tra 01 copy.jpg"
-resultHash = compute_md5(filePath)
+file_path = "C:\\Users\\sners\\Desktop\\FolderName\\2009-03 - 03-09 Nott Nat Tra 01 copy.jpg"
+result_hash = compute_md5(file_path)
 
-print(resultHash)
+print(result_hash)
