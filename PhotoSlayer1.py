@@ -9,24 +9,35 @@ def compute_md5(file_path):
             md5_hash.update(chunk)
     return md5_hash.hexdigest()
 
-def traverse_and_hash(root_directory, extensions, csv_filename):
-    with open(csv_filename, 'w', newline='') as csvfile:
-        fieldnames = ['File Path', 'MD5 Hash']
+def walk_through_files(path, extensions):
+   for (dirpath, dirnames, filenames) in os.walk(path):
+      for filename in filenames:
+          if filename.lower().endswith(extensions):
+             yield (filename, os.path.join(dirpath, filename))
+
+def create_csv(csv_filepath):
+    with open(csv_filepath, 'w', newline='') as csvfile:
+        fieldnames = ['name', 'path', 'hash']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
+        csvfile.close()
 
-        for dirpath, _, filenames in os.walk(root_directory):
-            for filename in filenames:
-                if filename.lower().endswith(extensions):
-                    file_path = os.path.join(dirpath, filename)
-                    md5_hash = compute_md5(file_path)
-                    
-                    # Write the file path and MD5 hash to the CSV file
-                    writer.writerow({'File Path': file_path, 'MD5 Hash': md5_hash})
+def write_to_csv(csv_filepath, csv_data):
+    with open(csv_filepath, 'a', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=csv_data.keys())
+        writer.writerow(csv_data)
+    csvfile.close()
+
+        
+def analyse_files(root_directory, extensions, csvfile):
+    create_csv(csvfile)
+    for fname, filepath in walk_through_files(root_directory, extensions):
+        csv_data = {'File Name': fname, 'File Path' : filepath, 'MD5 Hash' : compute_md5(filepath)} 
+        write_to_csv(csvfile, csv_data)
+
 
 if __name__ == "__main__":
-    root_directory = "C:\\Users\\sners\\Desktop\\Team Turkey Run 2019"
+    root_directory = "\\\\fatsners\\Colin\\Photos"
     extensions = (".jpg", ".jpeg")
-    csv_filename = "C:\\Users\\sners\\Desktop\\Team Turkey Run 2019\\TestOutput.csv"
-
-    traverse_and_hash(root_directory, extensions, csv_filename)
+    csv_filename = "C:\\Users\\sners\\Desktop\\Team Turkey Run 2019\\PhotosOnServer.csv"
+    analyse_files(root_directory, extensions, csv_filename)
