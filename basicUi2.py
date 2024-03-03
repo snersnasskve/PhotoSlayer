@@ -1,7 +1,7 @@
 import wx
 
 class PSPanel(wx.Panel):
-    
+
     def __init__(self, parent):
         super().__init__(parent)
         #   The purpose of a frame is to house UI elements
@@ -23,14 +23,26 @@ class PSPanel(wx.Panel):
         main_sizer.Add(file_sizer)
         main_sizer.Add(collect_button, 0, wx.ALL, 15)
         self.SetSizer(main_sizer)
+        self.call_me()      # NB: Dont put self in brackets
+
+    def call_me(self) :
+        print("you called")
+
         
     def onBrowseClicked(self, event):
         #
         print('You clicked Browse')
+        self.dir = event.GetString()
+        dlg = wx.DirDialog (None, "Choose input directory", "",
+                    wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST)
+        if dlg.ShowModal() == wx.ID_OK:
+            print('Selected files are: ', dlg.GetPath())
+        dlg.Destroy()
 
     def onCollectClicked(self, event):
         #
         print('You clicked Collect')
+
 
     def OnClose(self, e):
         super().Close(True)

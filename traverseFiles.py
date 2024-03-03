@@ -1,14 +1,14 @@
 import os
 
-root_directory = "C:\\Users\\sners\\Desktop\\Team Turkey Run 2019"
-extensions = (".jpg", ".jpeg")
+class FileWalker:
+# root_directory = "C:\\Users\\sners\\Desktop\\Team Turkey Run 2019"
+# extensions = (".jpg", ".jpeg")
 
-def walkDir(root_directory, extensions):
-    for dirpath, _, filenames in os.walk(root_directory):
-            for filename in filenames:
-                if filename.lower().endswith(extensions):
-                    file_path = os.path.join(dirpath, filename)
-                    print(file_path)
+  def walk_through_files(path, extensions = (".jpg", ".jpeg")):
+    for (dirpath, dirnames, filenames) in os.walk(path):
+        for filename in filenames:
+            if filename.lower().endswith(extensions):
+              yield (filename, os.path.join(dirpath, filename))
 
-
-walkDir(root_directory, extensions)
+# for fname in walk_through_files(root_directory, extensions):
+#     print(fname)
