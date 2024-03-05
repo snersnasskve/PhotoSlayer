@@ -1,11 +1,5 @@
 import wx
-
-# https://www.makeuseof.com/create-import-reuse-module-python/
 from traverseFiles import FileWalker
-sentence = "how to import and reuse your code in Python"
-fileWaljer = FileWalker()
-print(fileWaljer.walk_through_files('filepaath')) # 9
-
 
 class MainPanel(wx.Panel):
     def __init__(self, parent):
@@ -31,10 +25,10 @@ class MainPanel(wx.Panel):
         file_sizer.Add(labelText, proportion=1, flag=wx.ALL, border=5)
 
         # File path editable text frame
-        self.file_path = wx.TextCtrl(self)
-        self.file_path.SetBackgroundColour(self.phBackgroundColour)
-        self.file_path.SetFont(self.photoFont)
-        file_sizer.Add(self.file_path, proportion=3, flag=wx.ALL, border=5)
+        self.photoFolder = wx.TextCtrl(self)
+        self.photoFolder.SetBackgroundColour(self.phBackgroundColour)
+        self.photoFolder.SetFont(self.photoFont)
+        file_sizer.Add(self.photoFolder, proportion=3, flag=wx.ALL, border=5)
 
         # Browse button
         browse_button = self.GetPhotoButton('Browse')
@@ -79,7 +73,7 @@ class MainPanel(wx.Panel):
 
         
     def call_me(self) :
-        self.file_path.SetValue('')
+        self.photoFolder.SetValue('')
         
     def onBrowseClicked(self, event):
         #
@@ -89,13 +83,18 @@ class MainPanel(wx.Panel):
                     wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST)
         if dlg.ShowModal() == wx.ID_OK:
             print('Selected files are: ', dlg.GetPath())
-            self.file_path.SetValue(dlg.GetPath())
+            self.photoFolder.SetValue(dlg.GetPath())
         dlg.Destroy()
 
     def onCollectClicked(self, event):
         #
         print('You clicked Collect')
-
+        # # https://www.makeuseof.com/create-import-reuse-module-python/
+        sentence = "how to import and reuse your code in Python"
+        fileWalker = FileWalker()
+   
+        for fname in fileWalker.walkThroughFiles(self.photoFolder.GetValue()):
+            print(fname)
 
     def OnClose(self, e):
         super().Close(True)
@@ -103,7 +102,7 @@ class MainPanel(wx.Panel):
     def GetPhotoButton(self, buttonLabel):
         browse_button = wx.Button(self, label=buttonLabel)
         browse_button.SetBackgroundColour(self.phBackgroundColour)
-        browse_button.SetFont(wx.Font)
+        browse_button.SetFont(self.photoFont)
         return browse_button
 
 class MainFrame(wx.Frame):
@@ -113,6 +112,7 @@ class MainFrame(wx.Frame):
         self.panel.SetAutoLayout(1)
         self.Show()
 
-app = wx.App(0)
-frame = MainFrame(None)
-app.MainLoop()    
+if __name__ == "__main__":
+    app = wx.App(0)
+    frame = MainFrame(None)
+    app.MainLoop()    
