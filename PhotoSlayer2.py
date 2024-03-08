@@ -90,7 +90,6 @@ class MainPanel(wx.Panel):
         #
         print('You clicked Collect')
         # # https://www.makeuseof.com/create-import-reuse-module-python/
-        sentence = "how to import and reuse your code in Python"
         fileWalker = FileWalker()
    
         for fname in fileWalker.walkThroughFiles(self.photoFolder.GetValue()):
