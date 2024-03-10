@@ -1,5 +1,6 @@
 import wx
 from traverseFiles import FileWalker
+from writeFile import FileHashStore
 
 class MainPanel(wx.Panel):
     def __init__(self, parent):
@@ -92,6 +93,8 @@ class MainPanel(wx.Panel):
         # # https://www.makeuseof.com/create-import-reuse-module-python/
         fileWalker = FileWalker()
    
+        fileStore = FileHashStore()
+        
         for fname in fileWalker.walkThroughFiles(self.photoFolder.GetValue()):
             print(fname)
 

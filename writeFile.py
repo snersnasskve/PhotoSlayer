@@ -1,12 +1,26 @@
 import csv
+import tempfile
+import os
 
-csv_filepath = "C:\\Users\\sners\\Desktop\\Team Turkey Run 2019\\TestOutput.csv"
+class FileHashStore:
+    def __init__(self):
+        tempFolder = tempfile.gettempdir()
+        self.csvFilePath = os.path.join(tempFolder, "TestOutput.csv")
+        print("temp file = " + self.csvFilePath)
+        self.createCsv()
+        
 
-def write_to_csv(csv_filepath):
-    with open(csv_filepath, 'w', newline='') as csvfile:
-        fieldnames = ['File Name', 'File Path', 'MD5 Hash']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerow({'File Name': 'photo.jpg', 'File Path': 'file_path', 'MD5 Hash': 'md5_hash'})
+    def createCsv(self):
+        with open(self.csvFilePath, 'w', newline='') as csvfile:
+            fieldnames = ['name', 'path', 'hash']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            csvfile.close()
 
-write_to_csv(csv_filepath)
+    def write_to_csv(self, csv_data):
+        with open(self.csvFilePath, 'a', newline='') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=csv_data.keys())
+            writer.writerow(csv_data)
+        csvfile.close()
+
+  
