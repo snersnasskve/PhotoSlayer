@@ -3,6 +3,15 @@ import tempfile
 import os
 
 class FileHashStore:
+    """
+        A class for storing the file hashes
+
+        Attributes
+        ----------
+        csvFilePath : str
+            A generated csv file in a temporary location
+
+    """
     def __init__(self):
         tempFolder = tempfile.gettempdir()
         self.csvFilePath = os.path.join(tempFolder, "TestOutput.csv")
@@ -11,16 +20,27 @@ class FileHashStore:
         
 
     def createCsv(self):
+        """
+            Create empty csv with the field names
+        """
         with open(self.csvFilePath, 'w', newline='') as csvfile:
             fieldnames = ['name', 'path', 'hash']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             csvfile.close()
 
-    def write_to_csv(self, csv_data):
+    def writeToCsv(self, csvData):
+        """
+            Write to Csv file
+
+            Parameters
+            ----------
+            csvData : dict
+                {'File Name': str, 'File Path' : str, 'MD5 Hash' : str}
+        """
         with open(self.csvFilePath, 'a', newline='') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=csv_data.keys())
-            writer.writerow(csv_data)
+            writer = csv.DictWriter(csvfile, fieldnames=csvData.keys())
+            writer.writerow(csvData)
         csvfile.close()
 
   

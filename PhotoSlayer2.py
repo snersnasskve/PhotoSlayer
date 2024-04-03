@@ -1,6 +1,5 @@
 import wx
-from traverseFiles import FileWalker
-from writeFile import FileHashStore
+from fileWalker import FileWalker
 
 class MainPanel(wx.Panel):
     """
@@ -93,14 +92,10 @@ class MainPanel(wx.Panel):
 
     def onCollectClicked(self, event):
         #
-        print('You clicked Collect')
         # # https://www.makeuseof.com/create-import-reuse-module-python/
         fileWalker = FileWalker()
-   
-        fileStore = FileHashStore()
+        fileWalker.collectForPath(self.photoFolder.GetValue())
         
-        for fname in fileWalker.walkThroughFiles(self.photoFolder.GetValue()):
-            print(fname)
 
     def OnClose(self, e):
         super().Close(True)
