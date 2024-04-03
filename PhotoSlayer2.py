@@ -3,6 +3,9 @@ from traverseFiles import FileWalker
 from writeFile import FileHashStore
 
 class MainPanel(wx.Panel):
+    """
+       The main user interface
+    """
     def __init__(self, parent):
         self.phBackgroundColour = (255, 243, 226)
         wx.Panel.__init__(self, parent, -1, style=wx.FULL_REPAINT_ON_RESIZE)
@@ -52,6 +55,7 @@ class MainPanel(wx.Panel):
         self.SetSizer(main_sizer)
         self.call_me()      # NB: Dont put self in brackets
 
+    # On Paint 
     def OnPaint(self, event):
         dc = wx.PaintDC(self)
         dc.Clear()
