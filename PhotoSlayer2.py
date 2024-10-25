@@ -113,7 +113,6 @@ class MainPanel(wx.Panel):
         hashStore = fileWalker.collectForPath(self.photoFolder.GetValue())
         # Show images
         photoList = hashStore.readCsv()
-        print(photoList)
         self.index = 0
         self.showPhotoList(photoList)
         print("finished collecting")
@@ -141,6 +140,8 @@ class MainPanel(wx.Panel):
         self.list_ctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE)
         self.list_ctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onPhotoClicked, self.list_ctrl)
+        self.listPaths = photoList['path']
+        print(self.listPaths)
 
    
     
@@ -152,7 +153,12 @@ class MainPanel(wx.Panel):
 
     def onPhotoClicked(self, event):
         print("selected")
-        print(event.GetItem())
+        rowData = event.GetData()
+        rowText = event.GetText()
+        selectedRowNum = event.GetId()
+        print(rowData)
+        print(rowText)
+        #print(self.listPaths[selectedRowNum])
 
     def OnClose(self, e):
         super().Close(True)
