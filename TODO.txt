@@ -1,0 +1,5 @@
+- Show list of files on screen
+
+- Remove singletons from list of files
+
+-

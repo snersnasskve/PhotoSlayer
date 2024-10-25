@@ -1,5 +1,7 @@
 import wx
 from fileWalker import FileWalker
+from fileHashStore import FileHashStore
+import pandas
 
 class MainPanel(wx.Panel):
     """
@@ -48,9 +50,21 @@ class MainPanel(wx.Panel):
         collect_button = self.GetPhotoButton('Collect images')
         collect_button.Bind(wx.EVT_BUTTON, self.onCollectClicked)
 
+        # Add the empty list
+        
+        self.list_ctrl = wx.ListCtrl(self, size=(-1,-1),
+                         style=wx.LC_REPORT
+                         |wx.BORDER_SUNKEN
+                         )
+        self.list_ctrl.InsertColumn(0, 'Name', width=-1)
+        self.list_ctrl.InsertColumn(1, 'File Path', width=-1)
+        self.list_ctrl.InsertColumn(2, 'Hash', width=-1)
+
+
         # All together
         main_sizer.Add(file_sizer)
         main_sizer.Add(collect_button, 0, wx.ALL, 15)
+        main_sizer.Add(self.list_ctrl, 0, wx.ALL|wx.EXPAND, 5)
         self.SetSizer(main_sizer)
         self.call_me()      # NB: Dont put self in brackets
 
@@ -91,11 +105,54 @@ class MainPanel(wx.Panel):
         dlg.Destroy()
 
     def onCollectClicked(self, event):
+        print("collecting in progress")
+
         #
         # # https://www.makeuseof.com/create-import-reuse-module-python/
         fileWalker = FileWalker()
-        fileWalker.collectForPath(self.photoFolder.GetValue())
+        hashStore = fileWalker.collectForPath(self.photoFolder.GetValue())
+        # Show images
+        photoList = hashStore.readCsv()
+        print(photoList)
+        self.index = 0
+        self.showPhotoList(photoList)
+        print("finished collecting")
         
+    def showPhotoList(self, photoList):
+        print(photoList.count)
+        if photoList.count == 0:
+            print('no duplicates found')
+            return
+        # Says that imageList must be a class object.
+        # If you make images on the fly and don't keep them they will be garbage collected
+        iterrows =  photoList.iterrows()
+
+        #self.imageList = []
+        #self.prepareImages(iterrows)
+
+        line =  self.index
+        for idx, row in iterrows:
+            self.list_ctrl.InsertItem(self.index, line)
+            self.list_ctrl.SetItem(self.index, 0, row['name'])
+            self.list_ctrl.SetItem(self.index, 1,  row['path'])
+            self.list_ctrl.SetItem(self.index, 2,  row['hash'])
+            self.index += 1
+        self.list_ctrl.SetColumnWidth(0, wx.LIST_AUTOSIZE)
+        self.list_ctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE)
+        self.list_ctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE)
+        self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onPhotoClicked, self.list_ctrl)
+
+   
+    
+    def prepareImages(self, imageRows):
+        for idx, row in imageRows:
+            img = wx.Image(row['path'], wx.BITMAP_TYPE_ANY)
+            img = wx.Bitmap(img)
+            fixedimg=self.imageList.Add(img)
+
+    def onPhotoClicked(self, event):
+        print("selected")
+        print(event.GetItem())
 
     def OnClose(self, e):
         super().Close(True)

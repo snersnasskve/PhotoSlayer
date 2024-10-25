@@ -24,6 +24,8 @@ class FileWalker:
       csvData = {'File Name': fname, 'File Path' : filepath, 'MD5 Hash' : self.computeMd5(filepath)} 
       hashStore.writeToCsv(csvData)
 
+    return hashStore
+
 
   def walkThroughFiles(self, inPath, extensions = (".jpg", ".jpeg")):
     """

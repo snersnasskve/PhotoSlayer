@@ -2,6 +2,8 @@ import csv
 import tempfile
 import os
 
+import pandas
+
 class FileHashStore:
     """
         A class for storing the file hashes
@@ -42,5 +44,12 @@ class FileHashStore:
             writer = csv.DictWriter(csvfile, fieldnames=csvData.keys())
             writer.writerow(csvData)
         csvfile.close()
+
+    def readCsv(self):
+        rawData = pandas.read_csv(self.csvFilePath)
+        photoList = pandas.DataFrame(rawData).sort_values(by='hash')
+        photoList = photoList[photoList.duplicated('hash', keep=False)]
+        return photoList
+
 
   
