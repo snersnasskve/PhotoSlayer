@@ -140,7 +140,7 @@ class MainPanel(wx.Panel):
         self.list_ctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE)
         self.list_ctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onPhotoClicked, self.list_ctrl)
-        self.listPaths = photoList['path']
+        self.listPaths = photoList['path'].to_list()
         print(self.listPaths)
 
    
@@ -153,12 +153,14 @@ class MainPanel(wx.Panel):
 
     def onPhotoClicked(self, event):
         print("selected")
-        rowData = event.GetData()
-        rowText = event.GetText()
-        selectedRowNum = event.GetId()
-        print(rowData)
-        print(rowText)
-        #print(self.listPaths[selectedRowNum])
+        # Get the index of the selected row
+        selectedItem = self.list_ctrl.GetNextSelected(-1)
+        print(selectedItem)
+        # Print the contents of the file path at the selected row
+        print(self.listPaths[selectedItem])
+        # Open file in default application
+        wx.LaunchDefaultApplication(self.listPaths[selectedItem], 0)
+
 
     def OnClose(self, e):
         super().Close(True)
