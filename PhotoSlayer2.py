@@ -64,7 +64,7 @@ class MainPanel(wx.Panel):
         # All together
         main_sizer.Add(file_sizer)
         main_sizer.Add(collect_button, 0, wx.ALL, 15)
-        main_sizer.Add(self.list_ctrl, 0, wx.ALL|wx.EXPAND, 5)
+        main_sizer.Add(self.list_ctrl, wx.ALL|wx.EXPAND, wx.ALL|wx.EXPAND, 10)
         self.SetSizer(main_sizer)
         self.call_me()      # NB: Dont put self in brackets
 
@@ -141,7 +141,6 @@ class MainPanel(wx.Panel):
         self.list_ctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onPhotoClicked, self.list_ctrl)
         self.listPaths = photoList['path'].to_list()
-        print(self.listPaths)
 
    
     
@@ -173,7 +172,7 @@ class MainPanel(wx.Panel):
 
 class MainFrame(wx.Frame):
     def __init__(self, parent):
-        wx.Frame.__init__(self, parent, -1, title='Scaling Image', size=(600,400))
+        wx.Frame.__init__(self, parent, -1, title='Scaling Image', size=(700,500))
         self.panel = MainPanel(self)
         self.panel.SetAutoLayout(1)
         self.Show()
