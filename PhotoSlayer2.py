@@ -40,15 +40,22 @@ class MainPanel(wx.Panel):
         browse_button.Bind(wx.EVT_BUTTON, self.onBrowseClicked)
         file_sizer.Add(browse_button, proportion=1,
                        flag=wx.ALL, border=5)
-        file_sizer.AddSpacer(15)
 
+        file_sizer.AddSpacer(15)   
+      
         # All together
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         main_sizer.AddSpacer(15)
 
+        collect_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
         # Collect button below
         collect_button = self.GetPhotoButton('Collect images')
         collect_button.Bind(wx.EVT_BUTTON, self.onCollectClicked)
+
+            # Status string
+        self.statusText = wx.StaticText(self, label='  Idle  ')
+ 
 
         # Add the empty list
         
@@ -63,7 +70,14 @@ class MainPanel(wx.Panel):
 
         # All together
         main_sizer.Add(file_sizer)
-        main_sizer.Add(collect_button, 0, wx.ALL, 15)
+        collect_sizer.Add(collect_button, 0, wx.ALL, 15)
+        collect_sizer.AddSpacer(15)
+
+        collect_sizer.Add(self.statusText, proportion=1,
+                       flag=wx.ALL, border=20)
+        main_sizer.Add(collect_sizer)
+
+     
         main_sizer.Add(self.list_ctrl, wx.ALL|wx.EXPAND, wx.ALL|wx.EXPAND, 10)
         self.SetSizer(main_sizer)
         self.call_me()      # NB: Dont put self in brackets
@@ -95,17 +109,17 @@ class MainPanel(wx.Panel):
         
     def onBrowseClicked(self, event):
         #
-        print('You clicked Browse')
+        self.ShowStatus("Idle")
         self.dir = event.GetString()
         dlg = wx.DirDialog (None, "Choose input directory", "",
                     wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST)
         if dlg.ShowModal() == wx.ID_OK:
-            print('Selected files are: ', dlg.GetPath())
+            self.ShowStatus('Selected: ' + dlg.GetPath())
             self.photoFolder.SetValue(dlg.GetPath())
         dlg.Destroy()
 
     def onCollectClicked(self, event):
-        print("collecting in progress")
+        self.ShowStatus("Collecting in Progress ...")
 
         #
         # # https://www.makeuseof.com/create-import-reuse-module-python/
@@ -115,12 +129,11 @@ class MainPanel(wx.Panel):
         photoList = hashStore.readCsv()
         self.index = 0
         self.showPhotoList(photoList)
-        print("finished collecting")
         
     def showPhotoList(self, photoList):
         print(photoList.count)
         if photoList.count == 0:
-            print('no duplicates found')
+            self.ShowStatus("No Duplicates Found")
             return
         # Says that imageList must be a class object.
         # If you make images on the fly and don't keep them they will be garbage collected
@@ -141,6 +154,8 @@ class MainPanel(wx.Panel):
         self.list_ctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onPhotoClicked, self.list_ctrl)
         self.listPaths = photoList['path'].to_list()
+        numPhotos = photoList.shape[0]
+        self.ShowStatus(str(numPhotos) + " duplicates found!")
 
    
     
@@ -151,7 +166,6 @@ class MainPanel(wx.Panel):
             fixedimg=self.imageList.Add(img)
 
     def onPhotoClicked(self, event):
-        print("selected")
         # Get the index of the selected row
         selectedItem = self.list_ctrl.GetNextSelected(-1)
         print(selectedItem)
@@ -170,9 +184,14 @@ class MainPanel(wx.Panel):
         browse_button.SetFont(self.photoFont)
         return browse_button
 
+    def ShowStatus(self, statusMessage):       
+        self.statusText.SetLabel("  " + statusMessage + "  ")
+
+
+
 class MainFrame(wx.Frame):
     def __init__(self, parent):
-        wx.Frame.__init__(self, parent, -1, title='Scaling Image', size=(700,500))
+        wx.Frame.__init__(self, parent, -1, title='Photo Slayer', size=(700,500))
         self.panel = MainPanel(self)
         self.panel.SetAutoLayout(1)
         self.Show()
