@@ -27,7 +27,7 @@ class FileWalker:
     return hashStore
 
 
-  def walkThroughFiles(self, inPath, extensions = (".jpg", ".jpeg")):
+  def walkThroughFiles(self, inPath, extensions = (".jpg", ".jpeg", "mp4")):
     """
         Walk Through Files recursively
 

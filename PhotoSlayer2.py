@@ -200,3 +200,5 @@ if __name__ == "__main__":
     app = wx.App(0)
     frame = MainFrame(None)
     app.MainLoop()    
+
+    # https://www.digitalocean.com/community/tutorials/how-to-package-and-distribute-python-applications
